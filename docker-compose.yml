@@ -56,7 +56,7 @@ services:
       - server_cl_cache_dir=/home/pipeline-server/.cl-cache   
   OvmsClient0:
     build: 
-      dockerfile: Dockerfile.python
+      dockerfile: Dockerfile
       context: configs/opencv-ovms/demos/
     image: python-demo:dev
     container_name: object-detection0
