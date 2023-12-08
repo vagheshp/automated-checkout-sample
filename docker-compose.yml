@@ -55,10 +55,7 @@ services:
       - PLATFORM="core"
       - server_cl_cache_dir=/home/pipeline-server/.cl-cache   
   OvmsClient0:
-    build: 
-      dockerfile: Dockerfile
-      context: configs/opencv-ovms/demos/
-    image: python-demo:dev
+    image: vagheshpatel/python-ov-demo:dev
     container_name: object-detection0
     network_mode: "host"
     entrypoint: /opencv-ovms/scripts/docker_compose_generic_entrypoint.sh
