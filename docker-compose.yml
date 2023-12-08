@@ -53,7 +53,6 @@ services:
     environment:
       - DEVICE=CPU update_config:dev
       - PLATFORM="core"
-      - server_cl_cache_dir=/home/pipeline-server/.cl-cache   
   OvmsClient0:
     image: vagheshpatel/python-ov-demo:dev
     container_name: object-detection0
@@ -77,5 +76,3 @@ services:
     volumes:
       - ./configs/opencv-ovms:/opencv-ovms
       - ./results:/tmp/results   
-      - ~/.Xauthority:/home/dlstreamer/.Xauthority
-      - /tmp/.X11-unix
