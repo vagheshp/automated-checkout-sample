@@ -13,19 +13,19 @@ services:
       - RTSP_SERVER=camera-simulator
     depends_on:
       - camera-simulator
-  OvmsServer:
+  ovmsserver:
     image: vagheshpatel/ovms-server:1.0.0
     container_name: ovms-server0
     restart: always
     ports:
       - 9001
       - 9002
-  OvmsClient0:
+  ovmsclient0:
     image: vagheshpatel/ovms-client:1.0.0
     container_name: object-detection0
     environment:
       - CONTAINER_NAME="object-detection0"
       - INPUTSRC=rtsp://camera-simulator:8554/camera_0
-      - GRPC_URL=OvmsServer
+      - GRPC_URL=ovmsserver
     depends_on:
-      - OvmsServer
+      - ovmsserver
