@@ -6,29 +6,20 @@ services:
     ports:
       - "127.0.0.1:8554:8554"
   camera-simulator0:
-    build:
-      context: ./rtsp-simulator
-      dockerfile: Dockerfile
-    image: camera-simulator:1.0.0
+    image: vagheshpatel/camera-simulator:1.0.0
     container_name: camera-simulator0
     network_mode: "host"
     depends_on:
       - camera-simulator
   OvmsServer:
-    build:
-      context: ./server
-      dockerfile: Dockerfile  
-    image: ovms-server:1.0.0
+    image: vagheshpatel/ovms-server:1.0.0
     container_name: ovms-server0
     restart: always
     ports:
       - '9001:9001'
       - '9002:9002'
   OvmsClient0:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    image: ovms-client:1.0.0
+    image: vagheshpatel/ovms-client:1.0.0
     container_name: object-detection0
     network_mode: "host"
     environment:
