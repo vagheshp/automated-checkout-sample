@@ -1,0 +1,537 @@
+---
+apiVersion: "template.openshift.io/v1"
+kind: "Template"
+metadata:
+  creationTimestamp: "2023-12-08T17:35:26Z"
+  managedFields:
+  - apiVersion: "template.openshift.io/v1"
+    fieldsType: "FieldsV1"
+    fieldsV1:
+      f:objects: {}
+      f:parameters: {}
+    manager: "okhttp"
+    operation: "Update"
+    time: "2023-12-08T17:35:26Z"
+  name: "automated-checkout-sample"
+  namespace: "vagheshp7-intel"
+  resourceVersion: "1072715775"
+  uid: "9b15029e-7072-4dcb-b211-d835d2f6935a"
+objects:
+- apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsserver"
+    name: "OvmsServer"
+    namespace: "vagheshp7-intel"
+  spec:
+    ports:
+    - name: "9001"
+      port: 9001
+      targetPort: 9001
+    - name: "9002"
+      port: 9002
+      targetPort: 9002
+    selector:
+      io.kompose.service: "ovmsserver"
+  status:
+    loadBalancer: {}
+- apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      io.kompose.service: "camera-simulator"
+    name: "camera-simulator"
+    namespace: "vagheshp7-intel"
+  spec:
+    ports:
+    - name: "8554"
+      port: 8554
+      targetPort: 8554
+    selector:
+      io.kompose.service: "camera-simulator"
+  status:
+    loadBalancer: {}
+- apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    labels:
+      io.kompose.service: "camera-simulator0-claim0"
+    name: "camera-simulator0-claim0"
+    namespace: "default"
+  spec:
+    accessModes:
+    - "ReadWriteMany"
+    resources:
+      requests:
+        storage: "64Mi"
+    storageClassName: "aws-efs"
+  status: {}
+- apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsclient0-claim0"
+    name: "ovmsclient0-claim0"
+    namespace: "default"
+  spec:
+    accessModes:
+    - "ReadWriteMany"
+    resources:
+      requests:
+        storage: "64Mi"
+    storageClassName: "aws-efs"
+  status: {}
+- apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsclient0-claim1"
+    name: "ovmsclient0-claim1"
+    namespace: "default"
+  spec:
+    accessModes:
+    - "ReadWriteMany"
+    resources:
+      requests:
+        storage: "64Mi"
+    storageClassName: "aws-efs"
+  status: {}
+- apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsserver-claim0"
+    name: "ovmsserver-claim0"
+    namespace: "default"
+  spec:
+    accessModes:
+    - "ReadWriteMany"
+    resources:
+      requests:
+        storage: "64Mi"
+    storageClassName: "aws-efs"
+  status: {}
+- apiVersion: "image.openshift.io/v1"
+  kind: "ImageStream"
+  metadata:
+    labels:
+      io.kompose.service: "camera-simulator"
+    name: "camera-simulator"
+    namespace: "vagheshp7-intel"
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - from:
+        kind: "DockerImage"
+        name: "aler9/rtsp-simple-server"
+      importPolicy: {}
+      name: "latest"
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: "image.openshift.io/v1"
+  kind: "ImageStream"
+  metadata:
+    labels:
+      io.kompose.service: "camera-simulator0"
+    name: "camera-simulator0"
+    namespace: "vagheshp7-intel"
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - from:
+        kind: "DockerImage"
+        name: "openvino/ubuntu20_data_runtime:2021.4.2"
+      importPolicy: {}
+      name: "2021.4.2"
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: "image.openshift.io/v1"
+  kind: "ImageStream"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsclient0"
+    name: "ovmsclient0"
+    namespace: "vagheshp7-intel"
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - from:
+        kind: "DockerImage"
+        name: "vagheshpatel/python-ov-demo:dev"
+      importPolicy: {}
+      name: "dev"
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: "image.openshift.io/v1"
+  kind: "ImageStream"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsserver"
+    name: "ovmsserver"
+    namespace: "vagheshp7-intel"
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - from:
+        kind: "DockerImage"
+        name: "openvino/model_server:2023.1-gpu"
+      importPolicy: {}
+      name: "2023.1-gpu"
+      referencePolicy:
+        type: ""
+  status:
+    dockerImageRepository: ""
+- apiVersion: "apps.openshift.io/v1"
+  kind: "DeploymentConfig"
+  metadata:
+    labels:
+      io.kompose.service: "camera-simulator"
+    name: "camera-simulator"
+    namespace: "vagheshp7-intel"
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: "camera-simulator"
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        labels:
+          io.kompose.network/kompose-prj-default: "true"
+          io.kompose.service: "camera-simulator"
+      spec:
+        containers:
+        - image: " "
+          name: "camera-simulator"
+          ports:
+          - containerPort: 8554
+            hostIP: "127.0.0.1"
+            hostPort: 8554
+            protocol: "TCP"
+          resources: {}
+        nodeSelector:
+          edgenode: "${camera_simulator_NODE_LABEL}"
+        restartPolicy: "Always"
+        serviceAccount: "vagheshp7"
+        serviceAccountName: "vagheshp7"
+    test: false
+    triggers:
+    - type: "ConfigChange"
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - "camera-simulator"
+        from:
+          kind: "ImageStreamTag"
+          name: "camera-simulator:latest"
+      type: "ImageChange"
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: "apps.openshift.io/v1"
+  kind: "DeploymentConfig"
+  metadata:
+    labels:
+      io.kompose.service: "camera-simulator0"
+    name: "camera-simulator0"
+    namespace: "vagheshp7-intel"
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: "camera-simulator0"
+    strategy:
+      resources: {}
+      type: "Recreate"
+    template:
+      metadata:
+        labels:
+          io.kompose.network/kompose-prj-default: "true"
+          io.kompose.service: "camera-simulator0"
+      spec:
+        containers:
+        - args:
+          - "-nostdin"
+          - "-re"
+          - "-stream_loop"
+          - "-1"
+          - "-i"
+          - "/home/pipeline-server/sample-media/coca-cola-4465029-3840-15-bench.mp4"
+          - "-c"
+          - "copy"
+          - "-f"
+          - "rtsp"
+          - "-rtsp_transport"
+          - "tcp"
+          - "rtsp://localhost:8554/camera_0"
+          command:
+          - "ffmpeg"
+          image: " "
+          name: "camera-simulator0"
+          resources: {}
+          volumeMounts:
+          - mountPath: "/home/pipeline-server/sample-media"
+            name: "camera-simulator0-claim0"
+        nodeSelector:
+          edgenode: "${camera_simulator0_NODE_LABEL}"
+        restartPolicy: "Always"
+        serviceAccount: "vagheshp7"
+        serviceAccountName: "vagheshp7"
+        volumes:
+        - name: "camera-simulator0-claim0"
+          persistentVolumeClaim:
+            claimName: "camera-simulator0-claim0"
+    test: false
+    triggers:
+    - type: "ConfigChange"
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - "camera-simulator0"
+        from:
+          kind: "ImageStreamTag"
+          name: "camera-simulator0:2021.4.2"
+      type: "ImageChange"
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: "apps.openshift.io/v1"
+  kind: "DeploymentConfig"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsclient0"
+    name: "ovmsclient0"
+    namespace: "vagheshp7-intel"
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: "ovmsclient0"
+    strategy:
+      resources: {}
+      type: "Recreate"
+    template:
+      metadata:
+        labels:
+          io.kompose.network/kompose-prj-default: "true"
+          io.kompose.service: "ovmsclient0"
+      spec:
+        containers:
+        - command:
+          - "/opencv-ovms/scripts/docker_compose_generic_entrypoint.sh"
+          env:
+          - name: "CONTAINER_NAME"
+            value: "\"object-detection0\""
+          - name: "DETECTION_ARCHITECTURE_TYPE"
+            value: "ssd"
+          - name: "DETECTION_LABEL_FILE"
+            value: "coco_91cl_bkgr.txt"
+          - name: "DETECTION_MODEL_NAME"
+            value: "ssd_mobilenet_v1_coco"
+          - name: "DETECTION_OUTPUT_RESOLUTION"
+            value: "1280x720"
+          - name: "DETECTION_THRESHOLD"
+            value: "0.50"
+          - name: "DISPLAY"
+          - name: "ENTRYPOINT_SCRIPT"
+            value: "/opencv-ovms/demos/object_detection/python/entrypoint.sh"
+          - name: "GRPC_PORT"
+            value: "9001"
+          - name: "INPUTSRC"
+            value: "rtsp://localhost:8554/camera_0"
+          - name: "RENDER_MODE"
+            value: "1"
+          - name: "cid_count"
+            value: "0"
+          image: " "
+          name: "object-detection0"
+          resources: {}
+          volumeMounts:
+          - mountPath: "/opencv-ovms"
+            name: "ovmsclient0-claim0"
+          - mountPath: "/tmp/results"
+            name: "ovmsclient0-claim1"
+        nodeSelector:
+          edgenode: "${ovmsclient0_NODE_LABEL}"
+        restartPolicy: "Always"
+        serviceAccount: "vagheshp7"
+        serviceAccountName: "vagheshp7"
+        volumes:
+        - name: "ovmsclient0-claim0"
+          persistentVolumeClaim:
+            claimName: "ovmsclient0-claim0"
+        - name: "ovmsclient0-claim1"
+          persistentVolumeClaim:
+            claimName: "ovmsclient0-claim1"
+    test: false
+    triggers:
+    - type: "ConfigChange"
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - "object-detection0"
+        from:
+          kind: "ImageStreamTag"
+          name: "ovmsclient0:dev"
+      type: "ImageChange"
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: "apps.openshift.io/v1"
+  kind: "DeploymentConfig"
+  metadata:
+    labels:
+      io.kompose.service: "ovmsserver"
+    name: "ovmsserver"
+    namespace: "vagheshp7-intel"
+  spec:
+    replicas: 1
+    selector:
+      io.kompose.service: "ovmsserver"
+    strategy:
+      resources: {}
+      type: "Recreate"
+    template:
+      metadata:
+        labels:
+          io.kompose.network/kompose-prj-default: "true"
+          io.kompose.service: "ovmsserver"
+      spec:
+        containers:
+        - args:
+          - "--config_path"
+          - "/models/config.json"
+          - "--port"
+          - "9001"
+          - "--rest_port"
+          - "9002"
+          - "--log_level"
+          - "INFO"
+          env:
+          - name: "DEVICE"
+            value: "CPU update_config:dev"
+          - name: "PLATFORM"
+            value: "\"core\""
+          image: " "
+          name: "ovms-server0"
+          ports:
+          - containerPort: 9001
+            hostPort: 9001
+            protocol: "TCP"
+          - containerPort: 9002
+            hostPort: 9002
+            protocol: "TCP"
+          resources: {}
+          volumeMounts:
+          - mountPath: "/models"
+            name: "ovmsserver-claim0"
+        nodeSelector:
+          edgenode: "${ovmsserver_NODE_LABEL}"
+        restartPolicy: "Always"
+        serviceAccount: "vagheshp7"
+        serviceAccountName: "vagheshp7"
+        volumes:
+        - name: "ovmsserver-claim0"
+          persistentVolumeClaim:
+            claimName: "ovmsserver-claim0"
+    test: false
+    triggers:
+    - type: "ConfigChange"
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - "ovms-server0"
+        from:
+          kind: "ImageStreamTag"
+          name: "ovmsserver:2023.1-gpu"
+      type: "ImageChange"
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- apiVersion: "v1"
+  kind: "Pod"
+  metadata:
+    name: "automated-checkout-sample-fe"
+  spec:
+    containers:
+    - env:
+      - name: "MOUNT_PATH"
+        value: "/opencv-ovms,/tmp/results,/models,/home/pipeline-server/sample-media"
+      - name: "BUILD_TYPE"
+        value: "DC"
+      - name: "USER_NAMESPACE"
+        value: "vagheshp7-intel"
+      - name: "USER_DEPLOYMENT_NAME"
+        value: "automated-checkout-sample"
+      image: "registry.access.redhat.com/ubi8-minimal:latest"
+      imagePullPolicy: "Always"
+      name: "fe"
+      ports:
+      - containerPort: 8080
+        protocol: "TCP"
+      volumeMounts:
+      - mountPath: "/opencv-ovms"
+        name: "qdaioeop"
+      - mountPath: "/tmp/results"
+        name: "rtnmjhor"
+      - mountPath: "/models"
+        name: "japdwtpp"
+      - mountPath: "/home/pipeline-server/sample-media"
+        name: "fchzrybq"
+      - mountPath: "/staticdata/"
+        name: "staticdata"
+    nodeSelector:
+      edgenode: "${NODE_LABEL}"
+    serviceAccount: "vagheshp7"
+    volumes:
+    - name: "qdaioeop"
+      persistentVolumeClaim:
+        claimName: "ovmsclient0-claim0"
+    - name: "rtnmjhor"
+      persistentVolumeClaim:
+        claimName: "ovmsclient0-claim1"
+    - name: "japdwtpp"
+      persistentVolumeClaim:
+        claimName: "ovmsserver-claim0"
+    - name: "fchzrybq"
+      persistentVolumeClaim:
+        claimName: "camera-simulator0-claim0"
+    - name: "staticdata"
+      persistentVolumeClaim:
+        claimName: "vagheshp784626"
+parameters:
+- name: "camera_simulator_NODE_LABEL"
+  required: true
+- name: "camera_simulator0_NODE_LABEL"
+  required: true
+- name: "ovmsclient0_NODE_LABEL"
+  required: true
+- name: "ovmsserver_NODE_LABEL"
+  required: true
+- name: "NODE_LABEL"
+  required: true
