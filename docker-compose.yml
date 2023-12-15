@@ -29,5 +29,3 @@ services:
       - GRPC_URL=OvmsServer
     depends_on:
       - OvmsServer
-    volumes:
-      - ./results:/tmp/results   
