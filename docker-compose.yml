@@ -1,11 +1,3 @@
-#
-# Copyright (C) 2023 Intel Corporation.
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-
-
- ## Current Developer Toolbox doesn't support environment files, make sure to remove any files or environment variables starting with $
 version: '3.7'
 services:
   camera-simulator:
@@ -15,8 +7,8 @@ services:
       - "127.0.0.1:8554:8554"
   camera-simulator0:
     build:
-      context: ./
-      dockerfile: ./Dockerfile.rtsp
+      context: ./rtsp-simulator
+      dockerfile: Dockerfile
     image: camera-simulator:1.0.0
     container_name: camera-simulator0
     network_mode: "host"
@@ -24,8 +16,8 @@ services:
       - camera-simulator
   OvmsServer:
     build:
-      context: ./
-      dockerfile: ./Dockerfile.ovms  
+      context: ./server
+      dockerfile: Dockerfile  
     image: ovms-server:1.0.0
     container_name: ovms-server0
     restart: always
@@ -34,8 +26,8 @@ services:
       - '9002:9002'
   OvmsClient0:
     build:
-      context: ./
-      dockerfile: ./Dockerfile.client
+      context: ./client
+      dockerfile: Dockerfile
     image: ovms-client:1.0.0
     container_name: object-detection0
     network_mode: "host"
