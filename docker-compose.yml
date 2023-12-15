@@ -46,5 +46,3 @@ services:
       - OvmsServer
     volumes:
       - ./results:/tmp/results   
-      - ~/.Xauthority:/home/dlstreamer/.Xauthority
-      - /tmp/.X11-unix
