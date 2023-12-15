@@ -3,9 +3,9 @@ FROM openvino/ubuntu20_data_runtime:2021.4.2
 
 # Copy the sample-media directory into the image
 COPY sample-media /home/pipeline-server/sample-media
+COPY docker-entrypoint.sh /home/pipeline-server/
+
+ENV RTSP_SERVER=camera-simulator
 
 # Set the entrypoint to ffmpeg
-ENTRYPOINT ["ffmpeg"]
-
-# Set the command. This is a direct translation of your Docker Compose command.
-CMD ["-nostdin", "-re", "-stream_loop", "-1", "-i", "/home/pipeline-server/sample-media/coca-cola-4465029-3840-15-bench.mp4", "-c", "copy", "-f", "rtsp", "-rtsp_transport", "tcp", "rtsp://localhost:8554/camera_0"]
+ENTRYPOINT ["/home/pipeline-server/docker-entrypoint.sh"]

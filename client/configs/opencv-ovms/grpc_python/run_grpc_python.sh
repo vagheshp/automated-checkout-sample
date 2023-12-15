@@ -32,5 +32,5 @@ done
 echo "running grpcpython with GRPC_PORT=$GRPC_PORT, DETECTION_MODEL_NAME:$DETECTION_MODEL_NAME"
 
 # Run the grpc python client
-python3 ./grpc_python.py --input_src "$INPUTSRC" --grpc_address 127.0.0.1 --grpc_port "$GRPC_PORT" --model_name "$DETECTION_MODEL_NAME" \
+python3 ./grpc_python.py --input_src "$INPUTSRC" --grpc_address "$GRPC_URL" --grpc_port "$GRPC_PORT" --model_name "$DETECTION_MODEL_NAME" \
 2>&1  | tee >/tmp/results/r$cid_count.jsonl >(stdbuf -oL sed -n -e 's/^.*fps: //p' | stdbuf -oL cut -d , -f 1 > /tmp/results/pipeline$cid_count.log)
